@@ -8,6 +8,7 @@ services:
         depends_on:
             - node-api
             - java-api
+            - python-api
         ports:
             - 80:80
 
@@ -53,6 +54,25 @@ services:
             - CHOKIDAR_USEPOLLING=true
         ports:
             - '${NODE_API_PORT}:${NODE_API_PORT}'
+
+    python-api:
+        restart: unless-stopped
+        build:
+            dockerfile: Dockerfile.dev
+            context: './python-api'
+        volumes:
+            - ./python-api:/app
+        environment:
+            - PG_USER=${PG_USER}
+            - PG_PASSWORD=${PG_PASSWORD}
+            - PG_HOST=${PG_HOST}
+            - PG_PORT=${PG_PORT}
+            - PG_DATABASE=${PG_DATABASE}
+            - API_PORT=${PYTHON_API_PORT}
+            - CHOKIDAR_USEPOLLING=true
+        ports:
+            - '${PYTHON_API_PORT}:${PYTHON_API_PORT}'
+        command: uvicorn main:app --port ${PYTHON_API_PORT} --host 0.0.0.0 --reload
 
     java-api:
         restart: unless-stopped
