@@ -7,7 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 
-DATABASE_URL = f"postgres://{os.environ['PG_USER']}:{os.environ['PG_PASSWORD']}@{os.environ['PG_DATABASE']}:{os.environ['PG_PORT']}"
+DATABASE_URL = f"postgres://{os.environ['PG_USER']}:{os.environ['PG_PASSWORD']}@{os.environ['PG_HOST']}:{os.environ['PG_PORT']}"
 
 
 class Message(declarative_base()):
