@@ -17,49 +17,51 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30.0,
-          vertical: 30.0,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 30.0),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.8,
-              alignment: Alignment.centerLeft,
-              child: Column(
-                children: [
-                  Text(
-                    'Welcome to Second Life!',
-                    style: GoogleFonts.poppins(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w500,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 30.0,
+            vertical: 30.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 30.0),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                alignment: Alignment.centerLeft,
+                child: Column(
+                  children: [
+                    Text(
+                      'Welcome to Second Life!',
+                      style: GoogleFonts.poppins(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 4.0),
-                  Text(
-                    'Type in your username to proceed.',
-                    style: GoogleFonts.poppins(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w300,
+                    SizedBox(height: 4.0),
+                    Text(
+                      'Type in your username to proceed.',
+                      style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w300,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: TextInput(usernameController, 'Enter your Username'),
-            ),
-            BigButton(
-              'Sign in',
-              () {
-                authModel.login(usernameController.text);
-                Navigator.pushNamed(context, kHomeRoute);
-              },
-            ),
-          ],
+              Expanded(
+                child: TextInput(usernameController, 'Enter your Username'),
+              ),
+              BigButton(
+                'Sign in',
+                () {
+                  authModel.login(usernameController.text);
+                  Navigator.pushNamed(context, kHomeRoute);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

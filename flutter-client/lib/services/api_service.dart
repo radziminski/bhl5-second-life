@@ -49,8 +49,7 @@ class ApiService {
   }
 
   Future getMessagesForChat(int offerId, String sender, String receiver) async {
-    final res = await requestService.client
-        .get('https://bhl5-db-messenger.herokuapp.com/chat', queryParameters: {
+    final res = await requestService.client.get('/chat', queryParameters: {
       "sender_name": sender,
       "receiver_name": receiver,
       "advertisement_id": offerId,
@@ -66,8 +65,7 @@ class ApiService {
 
   Future postMessagesForChat(
       int offerId, String sender, String receiver, String message) async {
-    final res = await requestService.client
-        .post('https://bhl5-db-messenger.herokuapp.com/new_message', data: {
+    final res = await requestService.client.post('/new_message', data: {
       "sender_name": sender,
       "receiver_name": receiver,
       "advertisement_id": offerId,

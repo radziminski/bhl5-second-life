@@ -1,92 +1,91 @@
-
-
-CREATE TABLE user_profile (
-	user_id SERIAL PRIMARY KEY,
-	user_name TEXT NOT NULL,
-	user_lastname TEXT NOT NULL,
-	radius REAL NOT NULL
+CREATE TABLE "user" (
+  "username" TEXT PRIMARY KEY NOT NULL,
+  "password" TEXT
 );
 
-CREATE TABLE price_category (
-	category_id SERIAL PRIMARY KEY,
-	category_name TEXT NOT NULL
+CREATE TABLE "user_profile" (
+  "id" SERIAL PRIMARY KEY,
+  "username" TEXT NOT NULL,
+  "first_name" TEXT,
+  "last_name" TEXT
 );
 
-CREATE TABLE item_category (
-	category_id SERIAL PRIMARY KEY,
-	category_name TEXT NOT NULL
+CREATE TABLE "price_category" (
+  "id" SERIAL PRIMARY KEY,
+  "name" TEXT NOT NULL
 );
 
-CREATE TABLE advertisement (
-	advertisement_id SERIAL PRIMARY KEY,
-	title TEXT,
-	description TEXT,
-	latitude REAL NOT NULL,
-	longitude REAL NOT NULL,
-	appearance_date DATE,
-	owner_id INT,
-	price_category INT,
-	CONSTRAINT fk_user
-		FOREIGN KEY(owner_id)
-			REFERENCES user_profile(user_id)
-			ON DELETE CASCADE,
-	CONSTRAINT fk_price_category
-		FOREIGN KEY(price_category)
-			REFERENCES price_category(category_id)
-			ON DELETE SET NULL
+CREATE TABLE "item_category" (
+  "id" SERIAL PRIMARY KEY,
+  "name" TEXT NOT NULL
 );
 
-CREATE TABLE image_url (
-	image_id SERIAL PRIMARY KEY,
-	image_url TEXT,
-	advertisement_id INT,
-	CONSTRAINT fk_adverisement
-		FOREIGN KEY(advertisement_id)
-			REFERENCES advertisement(advertisement_id)
-			ON DELETE CASCADE
+CREATE TABLE "advertisement" (
+  "id" SERIAL PRIMARY KEY,
+  "title" TEXT NOT NULL,
+  "description" TEXT,
+  "latitude" REAL NOT NULL,
+  "longitude" REAL NOT NULL,
+  "created_at" TIMESTAMP NOT NULL,
+  "owner" INT NOT NULL,
+  "price_category" INT
 );
 
-CREATE TABLE messages (
-	message_id SERIAL PRIMARY KEY,
-	sender INT,
-	receiver INT,
-	message_content TEXT,
-	advertisement_id INT,
-	message_timestamp TIMESTAMP NOT NULL,
-	CONSTRAINT fk_first
-		FOREIGN KEY(sender)
-			REFERENCES user_profile(user_id)
-			ON DELETE CASCADE,
-	CONSTRAINT fk_second
-		FOREIGN KEY(receiver)
-			REFERENCES user_profile(user_id)
-			ON DELETE CASCADE
+CREATE TABLE "advertisement_image" (
+  "id" SERIAL PRIMARY KEY,
+  "url" TEXT NOT NULL,
+  "advertisement" INT NOT NULL
 );
 
-CREATE TABLE user_liked_advertisements (
-	connection_id SERIAL PRIMARY KEY,
-	user_id INT,
-	advertisement_id INT,
-	CONSTRAINT fk_user
-		FOREIGN KEY(user_id)
-			REFERENCES user_profile(user_id)
-			ON DELETE CASCADE,
-	CONSTRAINT fk_advertisement
-		FOREIGN KEY(advertisement_id)
-			REFERENCES advertisement(advertisement_id)
-			ON DELETE CASCADE
+CREATE TABLE "advertisement_match" (
+  "id" SERIAL PRIMARY KEY,
+  "advertisement_one" INT NOT NULL,
+  "advertisement_two" INT NOT NULL
 );
 
-CREATE TABLE advertisement_item_category (
-	connection_id SERIAL PRIMARY KEY,
-	advertisement_id INT,
-	item_category_id INT,
-	CONSTRAINT fk_advertisement
-		FOREIGN KEY(advertisement_id)
-			REFERENCES advertisement(advertisement_id)
-			ON DELETE CASCADE,
-	CONSTRAINT fk_category
-		FOREIGN KEY(item_category_id)
-			REFERENCES item_category(category_id)
-			ON DELETE CASCADE
+CREATE TABLE "advertisement_like" (
+  "id" SERIAL PRIMARY KEY,
+  "user" INT NOT NULL,
+  "advertisement" INT NOT NULL
 );
+
+CREATE TABLE "advertisement_item_category" (
+  "id" SERIAL PRIMARY KEY,
+  "advertisement" INT NOT NULL,
+  "item_category" INT NOT NULL
+);
+
+CREATE TABLE "message" (
+  "id" SERIAL PRIMARY KEY,
+  "content" TEXT NOT NULL,
+  "advertisement_match" INT NOT NULL,
+  "sender" INT NOT NULL,
+  "receiver" INT NOT NULL,
+  "created_at" TIMESTAMP NOT NULL
+);
+
+ALTER TABLE "user" ADD FOREIGN KEY ("username") REFERENCES "user_profile" ("id");
+
+ALTER TABLE "advertisement" ADD FOREIGN KEY ("owner") REFERENCES "user_profile" ("id");
+
+ALTER TABLE "price_category" ADD FOREIGN KEY ("id") REFERENCES "advertisement" ("price_category");
+
+ALTER TABLE "advertisement" ADD FOREIGN KEY ("id") REFERENCES "advertisement_image" ("advertisement");
+
+ALTER TABLE "advertisement" ADD FOREIGN KEY ("id") REFERENCES "advertisement_match" ("advertisement_one");
+
+ALTER TABLE "advertisement" ADD FOREIGN KEY ("id") REFERENCES "advertisement_match" ("advertisement_two");
+
+ALTER TABLE "user_profile" ADD FOREIGN KEY ("id") REFERENCES "advertisement_like" ("user");
+
+ALTER TABLE "advertisement" ADD FOREIGN KEY ("id") REFERENCES "advertisement_like" ("advertisement");
+
+ALTER TABLE "advertisement_item_category" ADD FOREIGN KEY ("advertisement") REFERENCES "advertisement" ("id");
+
+ALTER TABLE "advertisement_item_category" ADD FOREIGN KEY ("item_category") REFERENCES "item_category" ("id");
+
+ALTER TABLE "message" ADD FOREIGN KEY ("advertisement_match") REFERENCES "advertisement_match" ("id");
+
+ALTER TABLE "message" ADD FOREIGN KEY ("sender") REFERENCES "user_profile" ("id");
+
+ALTER TABLE "message" ADD FOREIGN KEY ("receiver") REFERENCES "user_profile" ("id");
